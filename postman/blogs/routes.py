@@ -26,3 +26,25 @@ def blog_new():
     db.session.commit()
 
     return 'OK', 200
+
+
+# Route to edit the blog
+@blogs.route('/blogs/<int:blog_id>/edit')
+def blog_edit(blog_id):
+    data = request.get_json()
+    blog = Blog.query.get_or_404(blog_id)
+
+    if data['title']:
+        blog.title = data['title']
+    if data['summary']:
+        blog.summary = data['summary']
+
+# Route to delete a blog
+@blogs.route('/blogs/<int:blog_id>/delete')
+def blog_delete(blog_id):
+    blog = Blog.query.get_or_404(blog_id)
+
+    db.session.delete(blog)
+    db.session.commit()
+
+    return 'OK', 200
