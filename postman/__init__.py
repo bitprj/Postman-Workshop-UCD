@@ -6,7 +6,7 @@ from postman.config import *
 app = Flask(__name__, static_folder='./static')
 
 app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://iahjbxii:xdHS0nZ2AC648057xzkyXI9WMLRqqXyU@salt.db.elephantsql.com:5432/iahjbxii'
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

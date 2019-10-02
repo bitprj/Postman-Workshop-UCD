@@ -8,7 +8,7 @@ blogs = Blueprint('blogs', __name__)
 # Route to return all blogs
 @blogs.route('/blogs')
 def blog_index():
-    blogs = Blog.query.all
+    blogs = Blog.query.all()
     data = {}
 
     for blog in blogs:
@@ -17,7 +17,7 @@ def blog_index():
     return jsonify(data)
 
 
-# Route to return a speciic blog
+# Route to return a specific blog
 @blogs.route('/blogs/<int:blog_id>')
 def blog_show(blog_id):
     blog = Blog.query.get_or_404(blog_id)
@@ -37,19 +37,19 @@ def blog_new():
 
 
 # Route to edit the blog
-@blogs.route('/blogs/<int:blog_id>/edit')
+@blogs.route('/blogs/<int:blog_id>/edit', methods=['PUT'])
 def blog_edit(blog_id):
     data = request.get_json()
     blog = Blog.query.get_or_404(blog_id)
 
-    if data['title']:
+    if 'title' in data:
         blog.title = data['title']
-    if data['summary']:
+    if 'summary' in data:
         blog.summary = data['summary']
 
     db.session.commit()
 
-    return 'OK', 200
+    return jsonify({'id': blog.id, 'title': blog.title, 'summary': blog.summary})
 
 # Route to delete a blog
 @blogs.route('/blogs/<int:blog_id>/delete', methods=['DELETE'])
