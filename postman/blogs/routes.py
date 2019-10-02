@@ -12,20 +12,28 @@ def blog_index():
     data = {}
 
     for blog in blogs:
-        data[blog.title] = {'title': blog.title, 'summary': blog.summary}
+        data[blog.title] = {'id': blog.id, 'title': blog.title, 'summary': blog.summary}
 
     return jsonify(data)
 
 
+# Route to return a speciic blog
+@blogs.route('/blogs/<int:blog_id>')
+def blog_show(blog_id):
+    blog = Blog.query.get_or_404(blog_id)
+
+    return jsonify({'id': blog.id, 'title': blog.title, 'summary': blog.summary})
+
+
 # Route to create a blog
-@blogs.route('/blogs/new')
+@blogs.route('/blogs/new', methods=['POST'])
 def blog_new():
     data = request.get_json()
     blog = Blog(title=data['title'], summary=data['summary'])
     db.session.add(blog)
     db.session.commit()
 
-    return 'OK', 200
+    return jsonify({'id': blog.id, 'title': blog.title, 'summary': blog.summary})
 
 
 # Route to edit the blog
@@ -39,8 +47,12 @@ def blog_edit(blog_id):
     if data['summary']:
         blog.summary = data['summary']
 
+    db.session.commit()
+
+    return 'OK', 200
+
 # Route to delete a blog
-@blogs.route('/blogs/<int:blog_id>/delete')
+@blogs.route('/blogs/<int:blog_id>/delete', methods=['DELETE'])
 def blog_delete(blog_id):
     blog = Blog.query.get_or_404(blog_id)
 
